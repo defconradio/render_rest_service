@@ -94,7 +94,7 @@ def telegram_webhook():
     reply_to = message_obj.get("reply_to_message", {})
     if reply_to:
         quoted_text = reply_to.get("text", "")
-        match = re.search(r"Session:\*\s*`?([a-zA-Z0-9_\-]+)`?", quoted_text)
+        match = re.search(r"Session:\*?\s*[`*_]?([a-zA-Z0-9_\-]+)[`*_]?", quoted_text, re.IGNORECASE)
         if match:
             target_session_id = match.group(1)
 
