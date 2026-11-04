@@ -57,7 +57,7 @@ def chat():
     send_telegram_alert(session_id, user_message, page_url, customer)
 
     return jsonify({
-        "reply": "Thank you! Our support team has received your message.",
+        "reply": "Bienvenido a 🌶️ pepitonas.com !",
         "session_id": session_id
     })
 
