@@ -16,6 +16,10 @@ TELEGRAM_CHAT_ID = os.getenv("TELEGRAM_CHAT_ID")
 CLIENT_MESSAGES = {}
 MESSAGE_COUNTER = 0
 
+# Welcome message interval: defaults to 24 hours (86400s), configurable via WELCOME_INTERVAL_SECONDS
+WELCOME_INTERVAL_SECONDS = int(os.getenv("WELCOME_INTERVAL_SECONDS", "86400"))
+SESSION_LAST_WELCOME = {}
+
 def send_telegram_alert(session_id, message, page_url, customer="guest"):
     if not TELEGRAM_BOT_TOKEN or not TELEGRAM_CHAT_ID:
         print("Telegram credentials missing!")
@@ -56,8 +60,16 @@ def chat():
 
     send_telegram_alert(session_id, user_message, page_url, customer)
 
+    now = time.time()
+    last_welcome = SESSION_LAST_WELCOME.get(session_id, 0)
+
+    bot_reply = None
+    if (now - last_welcome) > WELCOME_INTERVAL_SECONDS:
+        SESSION_LAST_WELCOME[session_id] = now
+        bot_reply = "Bienvenido a 🌶️ pepitonas.com !"
+
     return jsonify({
-        "reply": "Bienvenido a 🌶️ pepitonas.com !",
+        "reply": bot_reply,
         "session_id": session_id
     })
 
